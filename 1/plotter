@@ -1,0 +1,159 @@
+#include<stdio.h>
+#include<stdlib.h>
+#define x 10
+#define y 100
+int count;
+
+int euclids(int m,int n)
+{
+	count=0;
+	int r;
+	while(1)
+	{
+		count++;
+		r=m%n;	
+		if(r==0)
+			break;
+		m=n;
+		n=r;
+	}
+	//printf("\n(Euclids)GCD is %d\n",n);
+	return count;
+}
+
+int consecutive(int m,int n)
+{	
+	count=0;
+	int min;
+	min=(m<n)?m:n;
+	while(1)
+	{
+		count++;
+		if(m%min==0)
+		{
+			count++;
+			if(n%min==0)
+				break;
+			min--;
+		}
+		else
+			min--;
+	}
+	//printf("\n(Consecutive)GCD is %d\n",min);
+	return count;
+}	
+
+int modified(int m,int n)
+{
+	count=0;
+	int temp;
+	while(n)
+	{
+		if(n>m)
+		{
+			temp=n;
+			n=m;
+			m=temp;
+		}
+		m=m-n;
+		count++;
+	}
+	//printf("\n(Modified)GCD is %d\n",m);
+	return count;		
+}
+
+void plotter(int ch)
+{
+	int m,n,minC,maxC,i,j,k;
+	FILE *fp1,*fp2;
+	if(ch==0)
+	{	
+		fp1=fopen("e_best.txt","a");
+		fp2=fopen("e_worst.txt","a");
+		for(i=x;i<=y;i+=10)
+		{
+			minC=10000;
+			maxC=0;
+			for(j=2;j<=i;j++)
+			{
+				for(k=2;k<=i;k++)
+				{
+					m=j;
+					n=k;
+					count=euclids(m,n);
+					if(count<minC)
+						minC=count;
+					if(count>maxC)
+						maxC=count;
+				}
+			}
+			fprintf(fp1,"%d\t%d\n",i,minC);
+			fprintf(fp2,"%d\t%d\n",i,maxC);
+		}
+		fclose(fp1);
+		fclose(fp2);					
+	}
+	if(ch==1)
+	{	
+		fp1=fopen("c_best.txt","a");
+		fp2=fopen("c_worst.txt","a");
+		for(i=x;i<=y;i+=10)
+		{
+			minC=10000;
+			maxC=0;
+			for(j=2;j<=i;j++)
+			{
+				for(k=2;k<=i;k++)
+				{
+					m=j;
+					n=k;
+					count=consecutive(m,n);
+					if(count<minC)
+						minC=count;
+					if(count>maxC)
+						maxC=count;
+				}
+			}
+			fprintf(fp1,"%d\t%d\n",i,minC);
+			fprintf(fp2,"%d\t%d\n",i,maxC);
+		}
+		fclose(fp1);
+		fclose(fp2);					
+	}
+	if(ch==2)
+	{	
+		fp1=fopen("m_best.txt","a");
+		fp2=fopen("m_worst.txt","a");
+		for(i=x;i<=y;i+=10)
+		{
+			minC=10000;
+			maxC=0;
+			for(j=2;j<=i;j++)
+			{
+				for(k=2;k<=i;k++)
+				{
+					m=j;
+					n=k;
+					count=consecutive(m,n);
+					if(count<minC)
+						minC=count;
+					if(count>maxC)
+						maxC=count;
+				}
+			}
+			fprintf(fp1,"%d\t%d\n",i,minC);
+			fprintf(fp2,"%d\t%d\n",i,maxC);
+		}
+		fclose(fp1);
+		fclose(fp2);					
+	}
+}
+
+
+
+int main()
+{	
+	for(int i=0;i<3;i++)
+		plotter(i);
+	return 0;
+}
