@@ -1,0 +1,80 @@
+#include<stdio.h>
+#include<stdlib.h>
+#include<string.h>
+int count;
+
+int stringMatch(char *text,char *pattern,int n,int m)
+{
+	count=0;
+	for(int i=0;i<=n-m;i++)
+	{
+		int j=0;
+		while(j<m)
+		{
+			count++;
+			if(pattern[j]!=text[i+j])
+				break;
+			j++;
+		}
+		if(j==m)
+		{
+			//printf("\nPattern found!\n");
+			return count;
+		}
+	}
+	//printf("\nPattern not found!\n");
+	return count;
+}
+
+void plotter()
+{
+	FILE *fp1,*fp2,*fp3;
+	char *text,*pattern;
+	
+	fp1=fopen("string_best.txt","a");
+	fp2=fopen("string_avg.txt","a");
+	fp3=fopen("string_worst.txt","a");
+	
+	text=(char*)malloc(1000*sizeof(char));
+	
+	for(int i=0;i<1000;i++)
+		text[i]='a';
+				
+	int n,m;
+	n=1000;
+	m=10;
+	while(m<=1000)
+	{
+		pattern=(char*)malloc(m*sizeof(char));
+		
+		//Best
+		for(int i=0;i<m;i++)
+			pattern[i]='a';
+		count=stringMatch(text,pattern,n,m);
+		fprintf(fp1,"%d\t%d\n",m,count);
+		
+		//Worst
+		pattern[m-1]='b';
+		count=stringMatch(text,pattern,n,m);
+		fprintf(fp3,"%d\t%d\n",m,count);
+		
+		//Average
+		for(int i=0;i<m;i++)
+			pattern[i]=97+rand()%3;	
+		count=stringMatch(text,pattern,n,m);
+		fprintf(fp2,"%d\t%d\n",m,count);
+		
+		if(m<100)
+			m+=10;
+		else
+			m+=100;	
+	}
+	free(text);
+	free(pattern);
+}
+
+int main()
+{
+	plotter();
+	return 0;
+}
