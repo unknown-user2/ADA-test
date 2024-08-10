@@ -1,0 +1,128 @@
+#include<stdio.h>
+#include<stdlib.h>
+#include<time.h>
+
+int count;
+int linear(int arr[],int key,int n)
+{
+	count=0;
+	for(int i=0;i<n;i++)
+	{
+		count++;
+		if(arr[i]==key)
+		{
+			//printf("\n[LINEAR]Key found at index %d\n",i);
+			return count;
+		}
+	}
+	//printf("\nKey not found!!!");
+	return count;
+}
+int binary(int arr[],int key,int low,int high)
+{
+	int mid;
+	
+	if(low>high)
+	return count-1;
+		
+	count++;
+	mid=(low+high)/2;
+	if(arr[mid]==key)
+	{
+		//printf("\n[BINARY]Key found at index %d\n",mid);
+		return count;
+	}
+	else if(arr[mid]>key)
+		binary(arr,key,low,mid-1);
+	else
+		binary(arr,key,mid+1,high);	
+}
+
+void plotter(int ch)
+{
+	int n;
+	srand(time(NULL));
+	//linear
+	if(ch==0)
+	{
+		FILE *fp1,*fp2,*fp3;
+		fp1=fopen("linear_best.txt","a");
+		fp2=fopen("linear_avg.txt","a");
+		fp3=fopen("linear_worst.txt","a");
+		n=2;
+		while(n<=1024)
+		{
+			int arr[n];
+			
+			//Best
+			for(int i=0;i<n;i++)
+				arr[i]=0;
+			count=linear(arr,0,n);
+			fprintf(fp1,"%d\t%d\n",n,count);
+			
+			//worst
+			count=linear(arr,1,n);
+			fprintf(fp3,"%d\t%d\n",n,count);
+			
+			//average
+			for(int i=0;i<n;i++)
+				arr[i]=rand()%n;
+			int key=rand()%n;
+			count=linear(arr,key,n);
+			fprintf(fp2,"%d\t%d\n",n,count);
+			
+			n*=2;
+		}
+		fclose(fp1);
+		fclose(fp2);
+		fclose(fp3);
+	}
+	
+	//binary
+	if(ch==1)
+	{
+		FILE *fp1,*fp2,*fp3;
+		fp1=fopen("binary_best.txt","a");
+		fp2=fopen("binary_avg.txt","a");
+		fp3=fopen("binary_worst.txt","a");
+		n=2;
+		while(n<=1024)
+		{
+			int arr[n];
+			
+			//Best
+			for(int i=0;i<n;i++)
+				arr[i]=0;
+			int mid=n/2;
+			arr[mid]=1;
+			count=0;
+			count=binary(arr,1,0,n);
+			fprintf(fp1,"%d\t%d\n",n,count);
+			
+			//worst
+			arr[mid]=0;
+			count=0;
+			count=binary(arr,1,0,n);
+			fprintf(fp3,"%d\t%d\n",n,count);
+			
+			//average
+			for(int i=0;i<n;i++)
+				arr[i]=rand()%n;
+			int key=rand()%n;
+			count=0;
+			count=binary(arr,-1,0,n);
+			fprintf(fp2,"%d\t%d\n",n,count);
+			
+			n*=2;
+		}
+		fclose(fp1);
+		fclose(fp2);
+		fclose(fp3);
+	}
+}
+int main()
+{
+	for(int i=0;i<2;i++)
+		plotter(i);
+	return 0;
+}
