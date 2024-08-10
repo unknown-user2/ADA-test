@@ -1,0 +1,48 @@
+#include<stdio.h>
+#include<stdlib.h>
+#include<string.h>
+
+int stringMatch(char *text,char *pattern,int n,int m)
+{
+	int count=0;
+	for(int i=0;i<=n-m;i++)
+	{
+		int j=0;
+		while(j<m)
+		{
+			count++;
+			if(pattern[j]!=text[i+j])
+				break;
+			j++;
+		}
+		if(j==m)
+		{
+			printf("\nPattern found!\n");
+			return count;
+		}
+	}
+	printf("\nPattern not found!\n");
+	return count;
+}
+
+int main()
+{
+	char text[100], pattern[100];
+	
+	printf("ENTER THE TEXT: "); 	
+	fgets(text, sizeof(text), stdin);
+	text[strcspn(text, "\n")] = '\0';
+	
+	printf("ENTER THE PATTERN: ");
+	fgets(pattern, sizeof(pattern), stdin);
+	pattern[strcspn(pattern, "\n")] = '\0';
+	
+	int n=strlen(text);
+	int m=strlen(pattern);
+	
+	int comparisons = stringMatch(text, pattern, n, m);
+	printf("Number of comparisons: %d\n", comparisons);
+	
+	return 0;
+	
+}
