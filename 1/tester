@@ -1,0 +1,76 @@
+#include<stdio.h>
+#include<stdlib.h>
+
+int euclids(int m,int n)
+{
+	int r;
+	while(1)
+	{
+		r=m%n;	
+		if(r==0)
+			break;
+		m=n;
+		n=r;
+	}
+	printf("\n(Euclids)GCD is %d\n",n);
+}
+
+int consecutive(int m,int n)
+{	
+	int min;
+	min=(m<n)?m:n;
+	while(1)
+	{
+		if(m%min==0)
+		{
+			if(n%min==0)
+				break;
+		}
+		else
+			min--;
+	}
+	printf("\n(Consecutive)GCD is %d\n",min);
+}	
+
+int modified(int m,int n)
+{
+	int temp;
+	while(n)
+	{
+		if(n>m)
+		{
+			temp=n;
+			n=m;
+			m=temp;
+		}
+		m=m-n;
+	}
+	printf("\n(Modified)GCD is %d\n",m);		
+}
+
+
+int main()
+{	
+
+	while(1)
+	{	
+		int m,n,ch,r;
+		printf("\n1.Euclids\n2.Consecutive integer checking\n3.Modified euclids\n0.Exit\n");
+		printf("Enter your choice: ");
+		scanf("%d",&ch);
+		if(ch==0)
+			return 0;
+		printf("Enter the value of m and n: ");
+		scanf("%d %d",&m,&n);
+		switch(ch)
+		{
+			case 1:euclids(m,n);
+				break;
+			case 2:consecutive(m,n);
+				break;
+			case 3:modified(m,n);
+				break;
+		}
+	}
+	return 0;
+}
