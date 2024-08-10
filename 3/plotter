@@ -1,0 +1,208 @@
+#include<stdio.h>
+#include<stdlib.h>
+#include<time.h>
+
+int count;
+
+int selection(int arr[],int n)
+{
+	count=0;
+	for(int i=0;i<n-1;i++)
+	{
+		int min=i;
+		for(int j=i+1;j<n;j++)
+		{
+			count++;
+			if(arr[min]>arr[j])
+				min=j;
+		}
+		if(min!=i)
+		{
+			int temp=arr[min];
+			arr[min]=arr[i];
+			arr[i]=temp;
+		}
+	}
+	//printf("\n[Selection] Elements after sorting:\n");
+	//for(int i=0;i<n;i++)
+		//printf("%d ",arr[i]);
+	return count;
+}
+
+
+int bubble(int arr[],int n)
+{
+	count=0;
+	for(int i=0;i<n-1;i++)
+	{
+		int flag=0;
+		for(int j=0;j<n-i-1;j++)
+		{
+			count++;
+			if(arr[j]>arr[j+1])
+			{
+				int temp=arr[j];
+				arr[j]=arr[j+1];
+				arr[j+1]=temp;
+				flag=1;
+			}
+		}
+		if(flag==0)
+			break;
+	}
+	return count;
+	//printf("\n[Bubble] Elements after sorting:\n");
+	//for(int i=0;i<n;i++)
+		//printf("%d ",arr[i]);
+}
+
+int insertion(int arr[],int n)
+{
+	count=0;
+	int v,j;
+	for(int i=1;i<n;i++)
+	{
+		v=arr[i];
+		j=i-1;
+		while(count++&&arr[j]>v)
+		{
+			arr[j+1]=arr[j];
+			j--;
+			if(j<0)
+				break;
+		}
+		arr[j+1]=v;
+	}
+	//printf("\n[Insertion] Elements after sorting:\n");
+	//for(int i=0;i<n;i++)
+		//printf("%d ",arr[i]);
+	return count;	
+}
+
+void plotter(int ch)
+{
+	srand(time(NULL));
+	if(ch==0)
+	{
+		FILE *fp1,*fp2,*fp3;
+		fp1=fopen("bubble_best.txt","a");
+		fp2=fopen("bubble_avg.txt","a");
+		fp3=fopen("bubble_worst.txt","a");
+		int n=10;
+		while(n<=30000)
+		{
+			int arr[n];
+			//Best
+			for(int i=0;i<n;i++)
+				arr[i]=i+1;
+			count=bubble(arr,n);
+			fprintf(fp1,"%d\t%d\n",n,count);
+			
+			//Worst
+			for(int i=0;i<n;i++)
+				arr[i]=n-i;
+			count=bubble(arr,n);
+			fprintf(fp3,"%d\t%d\n",n,count);
+			
+			//average
+			for(int i=0;i<n;i++)
+				arr[i]=rand()%n;
+			count=bubble(arr,n);
+			fprintf(fp2,"%d\t%d\n",n,count);
+			
+			if(n<10000)
+				n*=10;
+			else
+				n+=10000;
+		}
+		fclose(fp1);
+		fclose(fp2);
+		fclose(fp3);
+	}
+	if(ch==1)
+	{
+		FILE *fp1,*fp2,*fp3;
+		fp1=fopen("insert_best.txt","a");
+		fp2=fopen("insert_avg.txt","a");
+		fp3=fopen("insert_worst.txt","a");
+		int n=10;
+		while(n<=30000)
+		{
+			int arr[n];
+			//Best
+			for(int i=0;i<n;i++)
+				arr[i]=i+1;
+			count=insertion(arr,n);
+			fprintf(fp1,"%d\t%d\n",n,count);
+			
+			//Worst
+			for(int i=0;i<n;i++)
+				arr[i]=n-i;
+			count=insertion(arr,n);
+			fprintf(fp3,"%d\t%d\n",n,count);
+			
+			//average
+			for(int i=0;i<n;i++)
+				arr[i]=rand()%n;
+			count=insertion(arr,n);
+			fprintf(fp2,"%d\t%d\n",n,count);
+			
+			if(n<10000)
+				n*=10;
+			else
+				n+=10000;
+		}
+		fclose(fp1);
+		fclose(fp2);
+		fclose(fp3);
+	}
+	if(ch==2)
+	{
+		FILE *fp1,*fp2,*fp3;
+		
+		fp1=fopen("select_best.txt","a");
+		fp2=fopen("select_avg.txt","a");
+		fp3=fopen("select_worst.txt","a");
+		
+		int n=10;
+		
+		while(n<=30000)
+		{
+			int arr[n];
+			
+			//Best
+			for(int i=0;i<n;i++)
+				arr[i]=i+1;
+			count=selection(arr,n);
+			fprintf(fp1,"%d\t%d\n",n,count);
+			
+			//Worst
+			for(int i=0;i<n;i++)
+				arr[i]=n-i;
+			count=selection(arr,n);
+			fprintf(fp3,"%d\t%d\n",n,count);
+			
+			//average
+			for(int i=0;i<n;i++)
+				arr[i]=rand()%n;
+			count=selection(arr,n);
+			fprintf(fp2,"%d\t%d\n",n,count);
+			
+			if(n<10000)
+				n*=10;
+			else
+				n+=10000;
+		}
+		fclose(fp1);
+		fclose(fp2);
+		fclose(fp3);
+	}
+	
+}
+
+int main()
+{
+	for(int i=0;i<3;i++)
+		plotter(i);
+	return 0;
+}				
