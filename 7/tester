@@ -1,0 +1,98 @@
+#include<stdio.h>
+#include<stdlib.h>
+
+int graph[100][100],visited[100],path[100];
+int iscyclic,dfscount,count,d,start;
+
+void dfs(int n,int start,int parent)
+{
+	count++;
+	visited[start]=1;
+	printf("-->%c",65+start);
+	
+	path[start]=1;
+	for(int i=0;i<n;i++)
+	{
+		if(d==1)
+		{
+			if(i!=parent&&graph[start][i]&&visited[i]&&path[i])
+				iscyclic=1;
+		}
+		else
+		{
+			if(i!=parent&&graph[start][i]&&visited[i])
+				iscyclic=1;
+		}
+		if(graph[start][i]&&visited[i]==0)
+			dfs(n,i,start);
+	}
+	path[start]=0;
+}
+
+int main()
+{
+	int n;
+	dfscount=0;
+	count=0;
+	iscyclic=0;
+	start=0;
+	
+	printf("Enter the no. of elements: ");
+	scanf("%d",&n);
+	
+	printf("\nEnter the adjacency matrix: \n");
+	for(int i=0;i<n;i++)
+	{
+		for(int j=0;j<n;j++)
+		{
+			scanf("%d",&graph[i][j]);
+		}
+		visited[i]=0;
+		path[i]=0;
+	}
+	
+	printf("\nAdjacency matrix: ");
+	for(int i=0;i<n;i++)
+	{
+		for(int j=0;j<n;j++)
+		{
+			printf("%d ",graph[i][j]);
+		}
+		printf("\n");
+	}
+	
+	printf("\nEnter 1 if the graph is directed: ");
+	scanf("%d",&d);
+	
+	printf("\nDFS traversal starting from %c\n",65);
+	
+	dfs(n,0,-1);
+	dfscount++;
+	
+	if(count==n)
+	{
+		printf("\nThe graph is connected!\n");
+	}
+	else
+	{
+		printf("\nthe graph is not connected!\n");
+		start=1;
+		while(count!=n)
+		{
+			if(visited[start]!=1)
+			{
+				printf("\n");
+				dfs(n,start,-1);
+				dfscount++;
+			}
+			start++;
+		}
+	}
+	
+	printf("\nThe number of components: %d\n",dfscount);
+	if(iscyclic)
+		printf("\nThe graph is cyclic!\n");
+	else
+		printf("\nThe graph is acyclic!\n");
+		
+}
