@@ -1,8 +1,8 @@
 #include<stdio.h>
 #include<stdlib.h>
 
-int graph[100][100],visited[100],path[100];
-int iscyclic,dfscount,count,d,start,dcount;
+int graph[100][100],visited[100];
+int count,dcount;
 
 int dfs(int n,int start,int parent)
 {
@@ -21,8 +21,8 @@ void plotter(int ch)
 {
 	FILE *fp1,*fp2;
 	int v;
-	fp1=fopen("DFS_best.txt","a");
-	fp2=fopen("DFS_worst.txt","a");
+	fp1=fopen("DFStopo_best.txt","a");
+	fp2=fopen("DFStopo_worst.txt","a");
 	for(int i=1;i<=10;i++)
 	{
 		v=i;
@@ -55,11 +55,9 @@ void plotter(int ch)
 		}
 		
 		count=0;
-		dfscount=0;
 		
 		dcount=0;
 		dfs(v,0,-1);
-		dfscount++;
 		
 		int start=1;
 		while(count!=v)
@@ -67,7 +65,6 @@ void plotter(int ch)
 			if(visited[start]==0)
 			{
 				dfs(v,start,-1);
-				dfscount++;
 			}
 			start++;
 		}
