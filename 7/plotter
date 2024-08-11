@@ -33,7 +33,7 @@ void plotter(int ch)
 			{
 				for(int k=0;k<v;k++)
 				{
-					graph[i][j]=0;
+					graph[j][k]=0;
 				}
 			}
 			for(int i=0;i<v-1;i++)
