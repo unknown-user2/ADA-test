@@ -26,8 +26,7 @@ int consecutive(int m,int n)
 			if(n%min==0)
 				break;
 		}
-		else
-			min--;
+		min--;
 	}
 	printf("\n(Consecutive)GCD is %d\n",min);
 }	
