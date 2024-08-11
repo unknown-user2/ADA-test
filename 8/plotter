@@ -1,0 +1,109 @@
+#include<stdio.h>
+#include<stdlib.h>
+
+int graph[100][100],visited[100];
+int iscyclic,bfscount,count,bcount,start;
+
+void bfs(int n,int start)
+{
+	count++;
+	visited[start]=1;
+	
+	int queue[n],parent[n];
+	int rear=-1,front=-1,parentNode;
+	
+	queue[++rear]=start;
+	parent[rear]=-1;
+	
+	while(rear!=front)
+	{
+		start=queue[++front];
+		parentNode=parent[front];
+		//printf("-->%c",start+65);
+		
+		for(int i=0;i<n;i++)
+		{
+			bcount++;
+			if(i!=parentNode&&graph[start][i]&&visited[i])
+				iscyclic=1;
+			if(graph[start][i]&&visited[i]==0)
+			{
+				queue[++rear]=i;
+				parent[rear]=start;
+				
+				visited[i]=1;
+				count++;
+			}	
+		}
+	}
+}
+
+void plotter(int ch)
+{
+	FILE *fp1,*fp2;
+	int v;
+	fp1=fopen("BFS_best.txt","a");
+	fp2=fopen("BFS_worst.txt","a");
+	for(int i=1;i<=10;i++)
+	{
+		v=i;
+		if(ch==0)
+		{
+			//Best
+			for(int j=0;j<v;j++)
+			{
+				for(int k=0;k<v;k++)
+				{
+					graph[i][j]=0;
+				}
+			}
+			for(int i=0;i<v-1;i++)
+				graph[i][i+1]=1;	
+		}
+		if(ch==1)
+		{
+			//Worst
+			for(int j=0;j<v;j++)
+			{
+				for(int k=0;k<v;k++)
+				{
+					if(j!=k)
+						graph[j][k]=1;
+					else
+						graph[j][k]=0;
+				}
+			}	
+		}
+		
+		count=0;
+		bfscount=0;
+		
+		bcount=0;
+		bfs(v,0);
+		bfscount++;
+		
+		int start=1;
+		while(count!=v)
+		{
+			if(visited[start]==0)
+			{
+				bfs(v,start);
+				bfscount++;
+			}
+			start++;
+		}
+		
+		if(ch==0)
+			fprintf(fp1,"%d\t%d\n",v,bcount);
+		if(ch==1)
+			fprintf(fp2,"%d\t%d\n",v,bcount);
+	}
+	fclose(fp1);
+	fclose(fp2);
+}
+int main()
+{
+	for(int i=0;i<2;i++)
+		plotter(i);	
+	return 0;	
+}
