@@ -1,0 +1,94 @@
+#include<stdio.h>
+#include<stdlib.h>
+#include<time.h>
+
+int count;
+
+int merge(int *arr,int beg,int mid,int end)
+{
+	int i,j,k;
+	int n1=(mid-beg)+1;
+	int n2=end-mid;
+	int left[n1],right[n2];
+	
+	for(i=0;i<n1;i++)
+		left[i]=arr[beg+i];
+	for(j=0;j<n2;j++)
+		right[j]=arr[mid+j+1];
+	k=beg;
+	i=0;
+	j=0;
+	while(i<n1&&j<n2)
+	{	
+		count++;
+		if(left[i]<=right[j])
+			arr[k]=left[i++];
+		else
+			arr[k]=right[j++];
+		k++;
+	}
+	
+	while(i<n1)
+		arr[k++]=left[i++];
+	
+	while(j<n2)
+		arr[k++]=right[j++];
+		
+	return count;	
+}
+void mergesort(int *arr,int beg,int end)
+{
+	if(beg<end)
+	{
+		int mid=(beg+end)/2;
+		mergesort(arr,beg,mid);
+		mergesort(arr,mid+1,end);
+		merge(arr,beg,mid,end);
+	}
+}
+
+void plotter()
+{
+	srand(time(NULL));
+	int *arr;
+	FILE *fp1,*fp2,*fp3;
+	fp1=fopen("merge_best.txt","a");
+	fp2=fopen("merge_avg.txt","a");
+	fp3=fopen("merge_worst.txt","a");
+	
+	int n=2;
+	while(n<=1024)
+	{	
+		arr=(int*)malloc(n*sizeof(int));
+		
+		//Best
+		for(int i=0;i<n;i++)
+			arr[i]=i+1;
+		count=0;
+		mergesort(arr,0,n-1);
+		fprintf(fp1,"%d\t%d\n",n,count);
+		
+		//Worst
+		for(int i=0;i<n;i++)
+			arr[i]=n-i;
+		count=0;
+		mergesort(arr,0,n-1);
+		fprintf(fp3,"%d\t%d\n",n,count);
+		
+		//Average
+		for(int i=0;i<n;i++)
+			arr[i]=rand()%n;
+		count=0;
+		mergesort(arr,0,n-1);
+		fprintf(fp2,"%d\t%d\n",n,count);
+		
+		n*=2;
+	}
+	free(arr);
+}
+
+int main()
+{
+	plotter();
+	return 0;
+}
