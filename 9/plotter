@@ -1,0 +1,86 @@
+#include<stdio.h>
+#include<stdlib.h>
+
+int graph[100][100],visited[100];
+int count,dcount;
+
+int dfstopo(int n,int start,int parent)
+{
+	count++;
+	visited[start]=1;
+	
+	for(int i=0;i<n;i++)
+	{
+		dcount++;
+		if(graph[start][i]&&visited[i]==0)
+			dfstopo(n,i,start);
+	}
+}
+
+void plotter(int ch)
+{
+	FILE *fp1,*fp2;
+	int v;
+	fp1=fopen("DFStopo_best.txt","a");
+	fp2=fopen("DFStopo_worst.txt","a");
+	for(int i=1;i<=10;i++)
+	{
+		v=i;
+		if(ch==0)
+		{
+			//Best
+			for(int j=0;j<v;j++)
+			{
+				for(int k=0;k<v;k++)
+				{
+					graph[i][j]=0;
+				}
+			}
+			for(int i=0;i<v-1;i++)
+				graph[i][i+1]=1;	
+		}
+		if(ch==1)
+		{
+			//Worst
+			for(int j=0;j<v;j++)
+			{
+				for(int k=0;k<v;k++)
+				{
+					if(j!=k)
+						graph[j][k]=1;
+					else
+						graph[j][k]=0;
+				}
+			}	
+		}
+		
+		count=0;
+		
+		dcount=0;
+		dfstopo(v,0,-1);
+		
+		int start=1;
+		while(count!=v)
+		{
+			if(visited[start]==0)
+			{
+				dfstopo(v,start,-1);
+			}
+			start++;
+		}
+		
+		if(ch==0)
+			fprintf(fp1,"%d\t%d\n",v,dcount);
+		if(ch==1)
+			fprintf(fp2,"%d\t%d\n",v,dcount);
+	}
+	fclose(fp1);
+	fclose(fp2);
+}
+int main()
+{
+	for(int i=0;i<2;i++)
+		plotter(i);
+	return 0;
+		
+}
