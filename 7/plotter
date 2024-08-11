@@ -21,8 +21,8 @@ void plotter(int ch)
 {
 	FILE *fp1,*fp2;
 	int v;
-	fp1=fopen("DFStopo_best.txt","a");
-	fp2=fopen("DFStopo_worst.txt","a");
+	fp1=fopen("DFS_best.txt","a");
+	fp2=fopen("DFS_worst.txt","a");
 	for(int i=1;i<=10;i++)
 	{
 		v=i;
