@@ -1,0 +1,103 @@
+#include<stdio.h>
+#include<stdlib.h>
+
+int graph[100][100],visited[100];
+int iscyclic,bfscount,count,start;
+
+void bfs(int n,int start)
+{
+	count++;
+	visited[start]=1;
+	
+	int queue[n],parent[n];
+	int rear=-1,front=-1,parentNode;
+	
+	queue[++rear]=start;
+	parent[rear]=-1;
+	
+	while(rear!=front)
+	{
+		start=queue[++front];
+		parentNode=parent[front];
+		printf("-->%c",start+65);
+		
+		for(int i=0;i<n;i++)
+		{
+			if(i!=parentNode&&graph[start][i]&&visited[i])
+				iscyclic=1;
+			if(graph[start][i]&&visited[i]==0)
+			{
+				queue[++rear]=i;
+				parent[rear]=start;
+				
+				visited[i]=1;
+				count++;
+			}	
+		}
+	}
+}
+
+int main()
+{
+	int n;
+	bfscount=0;
+	count=0;
+	iscyclic=0;
+	start=0;
+	
+	printf("Enter the no. of elements: ");
+	scanf("%d",&n);
+	
+	printf("\nEnter the adjacency matrix: \n");
+	for(int i=0;i<n;i++)
+	{
+		for(int j=0;j<n;j++)
+		{
+			scanf("%d",&graph[i][j]);
+		}
+		visited[i]=0;
+	}
+	
+	printf("\nAdjacency matrix: \n");
+	for(int i=0;i<n;i++)
+	{
+		for(int j=0;j<n;j++)
+		{
+			printf("%d ",graph[i][j]);
+		}
+		printf("\n");
+	}
+	
+	
+	printf("\nBFS traversal:\n");
+	
+	bfs(n,0);
+	bfscount++;
+	
+	if(count==n)
+	{
+		printf("\nThe graph is connected!\n");
+	}
+	else
+	{
+		printf("\nThe graph is not connected!\n");
+		start=1;
+		while(count!=n)
+		{
+			if(visited[start]!=1)
+			{
+				printf("\n");
+				bfs(n,start);
+				bfscount++;
+			}
+			start++;
+		}
+	}
+	
+	printf("\nThe number of components: %d\n",bfscount);
+	if(iscyclic)
+		printf("\nThe graph is cyclic!\n");
+	else
+		printf("\nThe graph is acyclic!\n");
+		
+}
