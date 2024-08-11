@@ -1,0 +1,74 @@
+#include<stdio.h>
+#include<stdlib.h>
+
+void swap(int *a,int *b)
+{
+	int temp=*a;
+	*a=*b;
+	*b=temp;
+	
+}
+
+int partition(int *arr,int beg,int end)
+{
+	int i,j,k;
+	int p=arr[beg];
+	i=beg;
+	j=end+1;
+	do
+	{
+		do
+		{
+			i++;
+		}while(arr[i]<p);
+		
+		do
+		{
+			j--;
+		}while(arr[j]>p);
+		
+		swap(&arr[i],&arr[j]);
+		
+	}while(i<j);
+	
+	swap(&arr[i],&arr[j]);
+	swap(&arr[beg],&arr[j]);
+	
+	return j;
+}
+
+void quicksort(int *arr,int beg,int end)
+{
+	if(beg<end)
+	{
+		int split=partition(arr,beg,end);
+		quicksort(arr,beg,split-1);
+		quicksort(arr,split+1,end);
+	}
+}
+
+int main()
+{
+	int n,*arr;
+	printf("Enter the size of the array: ");
+	scanf("%d",&n);
+	arr=(int*)malloc(n*sizeof(int));
+	
+	for(int i=0;i<n;i++)
+	{
+		printf("Enter element no. %d: ",i+1);
+		scanf("%d",&arr[i]);
+	}
+	
+	printf("\nArray before sorting: ");
+	for(int i=0;i<n;i++)
+		printf("%d ",arr[i]);
+	
+	quicksort(arr,0,n-1);
+	
+	printf("\nArray after sorting: ");
+	for(int i=0;i<n;i++)
+		printf("%d ",arr[i]);
+	printf("\n");
+	return 0;
+}
