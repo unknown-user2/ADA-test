@@ -1,0 +1,55 @@
+#include<stdio.h>
+#include<stdlib.h>
+int count;
+int graph[40][40];
+
+void floyds(int n)
+{
+	int temp;
+	for(int k=0;k<n;k++)
+	{
+		for(int i=0;i<n;i++)
+		{	
+			temp=graph[i][k];
+				for(int j=0;j<n;j++)
+				{
+					if(temp<graph[i][j])
+					{
+						count++;
+						if(temp+graph[k][j]<graph[i][j])
+							graph[i][j]=temp+graph[k][j];
+					}			
+				}
+		}
+	}
+}
+
+void plotter()
+{
+	FILE *fp;
+	fp=fopen("floyds_general.txt","a");
+	for(int n=2;n<12;n++)
+	{
+		for(int i=0;i<n;i++)
+		{
+			for(int j=0;j<n;j++)
+			{
+				if(i==j)
+					graph[i][j]=0;
+				else
+					graph[i][j]=rand();
+				
+			}
+		}
+		count=0;
+		floyds(n);
+			fprintf(fp,"%d\t%d\n",n,count);
+	}
+	fclose(fp);
+}
+	
+int main()
+{	
+	plotter();
+	return 0;	
+}
