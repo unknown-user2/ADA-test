@@ -1,1 +1,74 @@
+#include<stdio.h>
+#include<stdlib.h>
 
+int v[100][100],w[100],p[100],n,m,count;
+
+int max(int a,int b)
+{
+	int max=(a>b)?a:b;
+	return max;
+}
+
+int knap(int i,int j)
+{
+	count++;
+	if(v[i][j]==-1)
+	{
+		if(w[i]>j)
+			v[i][j]=knap(i-1,j);
+		else
+			v[i][j]=max(knap(i-1,j),p[i]+knap(i-1,j-w[i]));		
+	}
+	return v[i][j];
+}
+
+void plotter()
+{
+	count=0;
+	printf("\nEnter the total number of items : ");
+	scanf("%d",&n);
+	
+	printf("\nEnter the capacity of the knapsack: ");
+	scanf("%d",&m);
+	
+	for(int i=1;i<=n;i++) //start from 1 to n
+	{
+		w[i]=rand()%n;
+		p[i]=rand()%20;
+	}
+	for(int i=0;i<=n;i++)
+	{
+		for(int j=0;j<=m;j++)
+		{
+			if(i==0||j==0)
+				v[i][j]=0;
+			else
+				v[i][j]=-1;
+		}
+	}
+	
+	knap(n,m);
+	printf("\n");
+}
+
+int main()
+{
+	FILE *fp1;
+	int ch;
+	fp1=fopen("knapsack2.txt","a");
+	while(1)
+	{
+		printf("\nEnter 1 to continue or 0 to exit: ");
+		scanf("%d",&ch);
+		switch(ch)
+		{
+			case 1:plotter();
+				fprintf(fp1,"%d\t%d\n",n,count);
+				break;
+			default:
+				fclose(fp1);
+				exit(0);
+		}
+	}
+	return 0;
+}
