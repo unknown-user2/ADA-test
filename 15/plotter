@@ -1,0 +1,145 @@
+#include<stdio.h>
+#include<stdlib.h>
+#include<limits.h>
+
+int cost[10][10],n,d[10],src,removed[10];
+int cnt=0,heapsize=0;
+int count,count2;
+
+struct vertex
+{
+	int id,dist;
+}heap[10];
+
+typedef struct vertex ver;
+
+void makegraph()
+{
+	printf("\nEnter the number of vertices: ");
+	scanf("%d",&n);
+	for(int i=0;i<n;i++)
+	{
+		for(int j=0;j<n;j++)
+		{
+			cost[i][j]=rand()%10;
+			if(cost[i][j]==0)
+				cost[i][j]=INT_MAX;
+		}
+	}
+	src=0;
+	for(int i=0;i<n;i++)
+	{
+		d[i]=INT_MAX;
+		removed[i]=0;
+	}
+	d[src]=0;
+}
+
+void swap(ver *a,ver *b)
+{
+	ver temp=*a;
+	*a=*b;
+	*b=temp;
+}
+
+void heapify(ver arr[],int n,int root)
+{
+	
+	int largest=root;
+	int left=2*root+1;
+	int right=2*root+2;
+	count++;
+	if(left<n)
+	{
+		if(arr[largest].dist>arr[left].dist)
+			largest=left;
+	}
+	if(right<n)
+	{
+		if(arr[largest].dist>arr[right].dist)
+			largest=right;
+	}
+	if(largest!=root)
+	{
+		swap(&arr[largest],&arr[root]);
+		heapify(arr,n,largest);
+	}
+}
+
+void heapsort(ver arr[],int n)
+{
+	for(int i=(n/2)-1;i>=0;i--)
+	{
+		heapify(arr,n,i);
+	}
+}
+
+ver deleteheap(ver heap[])
+{
+	ver min=heap[0];
+	heap[0]=heap[heapsize-1];
+	heapsize=heapsize-1;
+	heapify(heap,heapsize,0);
+	return min;
+}
+
+void dijkstra()
+{
+	for(int i=0;i<n;i++)
+	{
+		heap[i].id=i;
+		heap[i].dist=INT_MAX;
+	}
+	heap[src].dist=0;
+	heapsize=n;
+	heapsort(heap,heapsize);
+	
+	while(cnt!=n)
+	{
+		ver min=deleteheap(heap);
+		int u=min.id;
+		removed[u]=1;
+		cnt++;
+
+	
+		for(int i=0;i<n;i++)
+		{
+			if(!removed[i] && cost[u][i]!=INT_MAX)
+			{
+				if((d[u]+cost[u][i])<d[i])
+				{
+					d[i]=(d[u]+cost[u][i]);
+
+					for(int j=0;j<heapsize;j++)
+					{
+						if(heap[j].id==i)
+						{
+							heap[j].dist=d[i];
+							break;
+						}
+					}
+					heapsort(heap,heapsize);			
+				}	
+			}
+		}
+	}
+}
+
+void plotter()
+{
+	int sum=0;
+	count=0;
+	makegraph();
+	dijkstra();
+}
+
+int main()
+{
+	FILE *fp1;
+	int ch;
+	
+	fp1=fopen("dijkstra.txt","a");
+	plotter();
+	fprintf(fp1,"%d\t%d\n",n,count);
+	return 0;
+}
