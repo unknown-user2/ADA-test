@@ -50,7 +50,7 @@ int main()
 	
 	floyds(n);
 	
-	printf("\nAll pair shortest job: \n");
+	printf("\nAll pair shortest path: \n");
 	for(int i=0;i<n;i++)
 	{
 		for(int j=0;j<n;j++)
