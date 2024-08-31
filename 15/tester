@@ -126,7 +126,7 @@ int main()
 {
 	makegraph();
 	dijkstra();
-	printf("\nShoertest id %c is:\n",src+65);
+	printf("\nShortest id %c is:\n",src+65);
 	for(int i=0;i<n;i++)
 	{
 		printf("\n%c-->%c==%d",src+65,i+65,d[i]);
