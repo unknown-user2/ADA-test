@@ -134,7 +134,7 @@ void plotter(int ch)
 				{
 					m=j;
 					n=k;
-					count=consecutive(m,n);
+					count=modified(m,n);
 					if(count<minC)
 						minC=count;
 					if(count>maxC)
