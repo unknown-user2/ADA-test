@@ -1,0 +1,131 @@
+#include<stdio.h>
+#include<stdlib.h>
+int count;
+typedef struct queue
+{
+	int *arr,f,r,cnt;
+}QUE;
+
+int s[10];
+
+void indegree(int *arr[],int v,QUE *temp,int *flag,int *inq)
+{
+	for(int i=0;i<v;i++)
+	{
+		for(int j=0;j<v;j++)
+		{	
+			count++;
+			if(arr[j][i]==1)
+			{
+				inq[i]=inq[i]+1;
+			}
+		}
+		if(inq[i]==0)
+		{
+			temp->r=(temp->r+1)%v;
+			temp->arr[temp->r]=i;
+			temp->cnt=temp->cnt+1;
+			flag[i]=1;
+		}
+	}
+}
+
+void sourceremove(int *arr[],int v,QUE *temp,int *flag,int *inq)
+{
+	int cnt=0;
+	while(temp->cnt!=0)
+	{
+		int source=temp->arr[temp->f];
+		temp->f=temp->f+1;
+		temp->cnt=temp->cnt-1;
+		s[cnt]=source;
+		cnt++;
+		for(int i=0;i<v;i++)
+		{
+			if(arr[source][i]==1)
+			{
+				
+				inq[i]=inq[i]-1;
+			}
+			if(inq[i]==0&&flag[i]==0)
+			{
+				
+				temp->r=(temp->r+1)%v;
+				temp->arr[temp->r]=i;
+				temp->cnt=temp->cnt+1;
+				flag[i]=1;	
+			}
+		}
+	}
+}
+
+void plotter(int ch)
+{
+	FILE *fp1,*fp2;
+	fp1=fopen("topo_sr_best.txt","a");
+	fp2=fopen("topo_sr_worst.txt","a");
+	for(int i=1;i<=10;i++)
+	{
+		int v=i;
+		int *arr[v];
+		for(int i=0;i<v;i++)
+			arr[i]=(int*)malloc(v*sizeof(int));
+		if(ch==0)
+		{
+			for(int i=0;i<v;i++)
+			{
+				for(int j=0;j<v;j++)
+				{
+					arr[i][j]=0;
+				}
+			}
+			for(int i=0;i<v-1;i++)
+				arr[i][i+1]=1;
+		}
+		if(ch==1)
+		{
+			for(int i=0;i<v;i++)
+			{
+				for(int j=0;j<v;j++)
+				{
+					if(i==j)
+						arr[i][j]=0;
+					else
+						arr[i][j]=1;
+				}				
+			}
+		}
+		
+		QUE q;
+		q.arr=(int*)malloc(v*sizeof(int));
+		q.f=0;
+		q.r=-1;
+		q.cnt=0;
+		
+		int inq[v];
+		int flag[v];
+		for(int i=0;i<v;i++)
+		{
+			inq[i]=0;
+			flag[i]=0;
+		}
+	
+		count=0;
+	
+		indegree(arr,v,&q,flag,inq);
+		sourceremove(arr,v,&q,flag,inq);
+		if(ch==0)	
+			fprintf(fp1,"%d\t%d\n",v,count);
+		else
+			fprintf(fp2,"%d\t%d\n",v,count);		
+	}
+	fclose(fp1);
+	fclose(fp2);	
+}
+
+void main()
+{
+	for(int i=0;i<2;i++)
+		plotter(i);
+}
+	
